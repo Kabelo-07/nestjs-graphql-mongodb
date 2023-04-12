@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  mongo-db:
+    image: mongo:latest
+    env_file:
+      - .env.int
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+  graphql-api: 
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - ${PORT}:${PORT}
+    command: npm run start:dev
+    env_file:
+      - .env.int
+    depends_on:
+      - mongo-db
+
+volumes:
+  mongodb_data_container:
